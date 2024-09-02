@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>{% block title %}Kurly{% endblock %}</title>
+    <!-- <link href="{% static 'css/base.css' %}" rel="stylesheet"> -->
+</head>
+<body>
+    <header> <!-- 항상 상단에 있는 부분 -->
+        <div>
+            <p>회원가입</p><p>로그인</p><p>고객센터</p>
+        </div>
+        <div>
+            <p>로고 이미지</p>
+            <a href="/" class="">마켓컬리</a>
+            <a href="/" class="">뷰티컬리</a>
+            <p>검색창</p>
+            <p>이런저런아이콘</p>
+        </div>
+    
+        <nav>
+            <ul>
+                <li>
+                    <!-- 상품리스트 화면으로 넘어감 -->
+                    <a href="{% url 'shop:product_list' %}">카테고리</a>
+                </li>
+                <li>신상품</li>
+                <li>베스트</li>
+                <li>알뜰쇼핑</li>
+                <li>특가/할인</li>
+                <li>샛별배송안내</li>
+            </ul>
+        </nav>
+    
+    </header>
+    <div id="content">  <!-- 상단부 아래에 보일 부분 -->
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>

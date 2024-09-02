@@ -1,0 +1,31 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block title %}
+    {% if category %}{{ category.name }}{% else %}Products{% endif %}
+{% endblock %}
+
+
+{% block content %}
+<div> <!-- 카테고리 버튼들 -->
+    {% for c in categories %}
+        <li {% if category.slug == c.slug %}class="selected"{% endif %}>
+            <a href="{{ c.get_absolute_url }}">{{ c.get_name_display }}</a>
+        </li>
+    {% endfor %}
+</div>
+
+<div>
+    <h1>{% if category %}{{ category.get_name_display }}{% else %}Products{% endif %}</h1>
+    {% for product in products %}
+        <div>
+            <a href="{{ product.get_absolute_url }}">
+                <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">
+            </a>
+            <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+            <br>
+            {{ product.price }}원
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
