@@ -56,9 +56,9 @@
                 <tr>
                     <td>상품선택</td>
                     <td colspan="4">
-                        <button type="submit" name="action" value="subtract">-</button>
-                        {{ cart_product_form }}
-                        <button type="submit" name="action" value="add">+</button>
+                        <input type="submit" name="action" value="-">
+                        {{ cart_product_form.quantity }}
+                        <input type="submit" name="action" value="+">
                     </td>
                 </tr>
                 <tr>

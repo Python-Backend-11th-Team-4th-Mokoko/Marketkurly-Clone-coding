@@ -36,9 +36,9 @@ def product_detail(request, id, slug):
     if request.method == 'POST':
         form = CartAddProductForm(request.POST)
         if form.is_valid():
-            if request.POST.get('action') == 'add':
+            if request.POST.get('action') == '+':
                 form.add_quantity(request)
-            elif request.POST.get('action') == 'subtract':
+            elif request.POST.get('action') == '-':
                 form.subtract_quantity(request)
 
             quantity = form.cleaned_data['quantity']  # 입력된 수량
