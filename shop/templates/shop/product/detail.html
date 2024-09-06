@@ -6,16 +6,81 @@
 {% endblock %}
 
 {% block content %}
-<div class="product-detail">
-    <img src="{% if product.image %}{{ product.image.url }}
-                {% else %}{% static 'img/no_image.png' %}{% endif %}">
-    <h1>{{ product.name }}</h1>
-    <h2>
-        <a href="{{ product.category.get_absolute_url }}">
-            {{ product.category.get_name_display }}
-        </a>
-    </h2>
-    <p class="price">${{ product.price }}</p>
-    {{ product.description|linebreaks }}
+<div class="d-flex">
+    <div class="flex-grow-1" style="flex-basis: 50%;">
+    <div class="d-flex flex-row-reverse  mx-3">
+        <!-- 상품 이미지 -->
+        <img src="{% if product.image %}{{ product.image.url }}
+                    {% else %}{% static 'img/no_image.png' %}{% endif %}"
+                    width="320" height="210">
+    </div>
+    </div>
+
+    <div class="flex-grow-1" style="flex-basis: 50%;">
+        <h1>{{ product.name }}</h1>
+        <p class="">{{ product.price }}원</p>
+        <table>
+            <tr>
+                <td>배송</td>
+                <td>{{ product.delivery }}</td>
+            </tr>
+            <tr>
+                <td>판매자</td>
+                <td>컬리</td>
+            </tr>
+            <tr>
+                <td>포장타입</td>
+                <td>{{ product.packaging }}</td>
+            </tr>
+            <tr>
+                <td>판매단위</td>
+                <td>상품따라 다름(상자or개or판 등)</td>
+            </tr>
+            <tr>
+                <td>중량/용량</td>
+                <td>?</td>
+            </tr>
+            <tr>
+                <td>소비기한</td>
+                <td>??</td>
+            </tr>
+            <tr>
+                <td>안내사항</td>
+                <td>???</td>
+            </tr>
+        </table>
+        
+        <form method="post">
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <td>상품선택</td>
+                    <td colspan="4">
+                        <button type="submit" name="action" value="subtract">-</button>
+                        {{ cart_product_form }}
+                        <button type="submit" name="action" value="add">+</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5">
+                        <p>총 가격 {{ total_price }}원</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5">
+                        <input type="hidden" name="product_id" value="{{ product.id }}">
+                        <button type="submit" name="action" value="add_to_cart">장바구니에 담기</button>
+                    </td>
+                </tr>
+            </table>
+
+        <!-- <form action="{% url 'cart:cart_add' product.id %}" method="post">
+            {{ cart_product_form }}
+            {% csrf_token %}
+            <input type="submit" value="Add to cart">
+        </form> -->
+        {{ product.description|linebreaks }}
+    </div>
+
 </div>
 {% endblock %}

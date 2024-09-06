@@ -1,0 +1,65 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block title %}
+  Your shopping cart
+{% endblock %}
+
+{% block content %}
+<div>
+    <h1>장바구니</h1>
+</div>
+<div class="container py-4">
+    <!-- Flexbox를 사용하여 좌우로 나란히 배치 -->
+    <div class="d-flex justify-content-between">
+        
+        <!-- 왼쪽 영역: 상품 목록 -->
+        <div class="card w-75 me-3">
+            <div class="card-header">
+                <input type="checkbox"> 전체 선택 2/2
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">상온 상품</h5>
+                <div class="mb-3">
+                    <input type="checkbox"> [설화수] 탄력 3종 세트<br>
+                    <span>171,000원</span>
+                    <div class="mt-2">
+                        <button type="button" class="btn btn-outline-secondary">-</button>
+                        <span>1</span>
+                        <button type="button" class="btn btn-outline-secondary">+</button>
+                    </div>
+                </div>
+                <hr>
+                <div>
+                    <input type="checkbox"> [바쓰커피] 어쏘티드 커피 드립백 세트<br>
+                    <span>78,000원</span>
+                    <div class="mt-2">
+                        <button type="button" class="btn btn-outline-secondary">-</button>
+                        <span>1</span>
+                        <button type="button" class="btn btn-outline-secondary">+</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                상품 249,000원 + 배송비 무료<br>
+                <strong>총 결제금액: 249,000원</strong>
+            </div>
+        </div>
+
+        <!-- 오른쪽 영역: 결제 정보 -->
+        <div class="card w-25">
+            <div class="card-body">
+                <h5 class="card-title">결제 금액</h5>
+                <p>상품 금액: 268,000원</p>
+                <p>상품 할인 금액: -19,000원</p>
+                <p>배송비: 0원</p>
+                <hr>
+                <p>결제 예정 금액: 249,000원</p>
+                <button type="button" class="btn btn-primary btn-block">로그인</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

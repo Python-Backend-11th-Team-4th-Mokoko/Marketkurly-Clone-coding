@@ -1,0 +1,25 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block title %}
+  Your shopping cart
+{% endblock %}
+
+{% block content %}
+<div class="text-center"><!-- 가운데정렬  -->
+    <h1>장바구니</h1>
+</div>
+<div class="container py-4">
+    <!-- Flexbox를 사용하여 좌우로 나란히 배치 -->
+    <div class="d-flex justify-content-between">
+        <!-- 왼쪽 영역: 상품 목록 -->
+        <div class="card w-75 me-3">
+
+            <div class="card-header">
+                <input type="checkbox"> 전체 선택 {{  }}/{{  }}
+            </div>
+
+
+        </div>
+    </div>
+</div>

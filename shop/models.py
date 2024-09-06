@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
+from django.core.validators import MinValueValidator
 
 # 카테고리
 class Category(models.Model):
@@ -48,6 +49,7 @@ class Category(models.Model):
 class Product(models.Model):
     DELIVERY = [ # 배송방식
         ('샛별배송', '샛별배송'),
+        ('하루배송', '하루배송'),
         ('판매자배송', '판매자배송'),
         #설치배송
     ]
@@ -59,9 +61,10 @@ class Product(models.Model):
 
     category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
-    slug = models.SlugField(max_length=200) 
+    slug = models.SlugField(max_length=200)
     image = models.ImageField(upload_to='products/%Y/%m/%d', blank=True)
     description = models.TextField(blank=True)
+    stock = models.IntegerField(validators=[MinValueValidator(0)], blank=False, default=1)
     price = models.DecimalField(max_digits=9, decimal_places=0) # 원(단위)
     available = models.BooleanField(default=True) #제품판매가 가능한지 아닌지 여부
     delivery = models.CharField(max_length=10, choices=DELIVERY)
@@ -70,7 +73,7 @@ class Product(models.Model):
     updated = models.DateTimeField(auto_now=True)
     
     
-    # 판매자
+    # 판매자: seller 
     # 중량/용량
     # 알레르기정보
     # 소비기한

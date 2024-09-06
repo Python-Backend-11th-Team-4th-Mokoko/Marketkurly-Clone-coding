@@ -1,10 +1,11 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- bootstrap 반응형 디자인을 위함 -->
     <title>{% block title %}Kurly{% endblock %}</title>
-    <!-- <link href="{% static 'css/base.css' %}" rel="stylesheet"> -->
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
 </head>
 <body>
     <header> <!-- 항상 상단에 있는 부분 -->
@@ -16,7 +17,11 @@
             <a href="/" class="">마켓컬리</a>
             <a href="/" class="">뷰티컬리</a>
             <p>검색창</p>
-            <p>이런저런아이콘</p>
+            <p>배송지등록</p>
+            <p>찜목록</p>
+            <a href="{% url 'cart:cart_detail' %}">
+                <p>장바구니</p>
+            </a>
         </div>
     
         <nav>
@@ -34,9 +39,11 @@
         </nav>
     
     </header>
-    <div id="content">  <!-- 상단부 아래에 보일 부분 -->
+    <div id="">  <!-- 상단부 아래에 보일 부분 -->
         {% block content %}
         {% endblock %}
     </div>
+
+    <script src="{% static 'js/bootstrap.js' %}"></script>
 </body>
 </html>
