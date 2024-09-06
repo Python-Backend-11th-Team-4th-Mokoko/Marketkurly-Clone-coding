@@ -6,38 +6,110 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- bootstrap 반응형 디자인을 위함 -->
     <title>{% block title %}Kurly{% endblock %}</title>
     <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+    <style>
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        .header-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-top: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .nav-menu ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-menu ul li {
+            display: inline;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            border: 1px solid #7c3aed;
+            border-radius: 20px;
+            padding: 5px;
+        }
+
+        .search-bar input {
+            border: none;
+            outline: none;
+        }
+
+        .search-bar button {
+            background-color: transparent;
+            border: none;
+            color: #7c3aed;
+        }
+
+        a {
+            text-decoration: none;
+            color: #7c3aed;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <header> <!-- 항상 상단에 있는 부분 -->
-        <div>
-            <p>회원가입</p><p>로그인</p><p>고객센터</p>
-        </div>
-        <div>
-            <p>로고 이미지</p>
-            <a href="/" class="">마켓컬리</a>
-            <a href="/" class="">뷰티컬리</a>
-            <p>검색창</p>
-            <p>배송지등록</p>
-            <p>찜목록</p>
-            <a href="{% url 'cart:cart_detail' %}">
-                <p>장바구니</p>
-            </a>
+    <header>
+        <!-- 상단 회원가입, 로그인, 고객센터 -->
+        <div class="header-top container">
+            <div class="d-flex gap-3">
+                <a href="#">회원가입</a>
+                <a href="#">로그인</a>
+                <a href="#">고객센터</a>
+            </div>
         </div>
     
-        <nav>
+        <!-- 중앙 로고, 검색창, 장바구니 등 -->
+        <div class="header-bottom container">
+            <!-- 로고 영역 -->
+            <div class="logo">
+                <p>
+                    로고 이미지
+                    <a href="/" class="">마켓컬리</a>
+                    <a href="/" class="">뷰티컬리</a>
+                </p>
+            </div>
+    
+            <!-- 검색창 영역 -->
+            <div class="search-bar">
+                <input type="text" placeholder="검색어를 입력해주세요" class="form-control">
+                <button><i class="bi bi-search"></i> 🔍</button>
+            </div>
+    
+            <!-- 기타 아이콘 (배송지, 찜목록, 장바구니) -->
+            <div class="d-flex gap-3">
+                <p>배송지등록</p>
+                <p>찜목록</p>
+                <a href="{% url 'cart:cart_detail' %}">장바구니</a>
+            </div>
+        </div>
+    
+        <!-- 네비게이션 메뉴 -->
+        <nav class="nav-menu container">
             <ul>
-                <li>
-                    <!-- 상품리스트 화면으로 넘어감 -->
-                    <a href="{% url 'shop:product_list' %}">카테고리</a>
-                </li>
-                <li>신상품</li>
-                <li>베스트</li>
-                <li>알뜰쇼핑</li>
-                <li>특가/할인</li>
-                <li>샛별배송안내</li>
+                <li><a href="{% url 'shop:product_list' %}">카테고리</a></li>
+                <li><a href="#">신상품</a></li>
+                <li><a href="#">베스트</a></li>
+                <li><a href="#">알뜰쇼핑</a></li>
+                <li><a href="#">특가/혜택</a></li>
+                <li><a href="#">샛별배송안내</a></li>
             </ul>
         </nav>
-    
     </header>
     <div id="">  <!-- 상단부 아래에 보일 부분 -->
         {% block content %}
