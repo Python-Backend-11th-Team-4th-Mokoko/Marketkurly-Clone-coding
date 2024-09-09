@@ -24,7 +24,6 @@
     </div>
     <div class="flex-grow-1" style="flex-basis: 70%;"><!-- 상품 리스트 -->
         <div class="p-3">
-            <!-- <h1>{% if category %}{{ category.get_name_display }}{% else %}Products{% endif %}</h1> -->
             {% for product in products %}
                 <div>
                     <a href="{{ product.get_absolute_url }}"><!-- 디테일로 이동 -->

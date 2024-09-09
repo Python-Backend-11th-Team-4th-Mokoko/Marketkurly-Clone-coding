@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-    {{ product.name }}
+    {{ product.product_name }}
 {% endblock %}
 
 {% block content %}
@@ -17,7 +17,7 @@
     </div>
 
     <div class="flex-grow-1" style="flex-basis: 50%;">
-        <h1>{{ product.name }}</h1>
+        <h1>{{ product.product_name }}</h1>
         <p class="">{{ product.price }}원</p>
         <table>
             <tr>

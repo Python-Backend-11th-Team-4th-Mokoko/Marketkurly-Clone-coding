@@ -60,7 +60,7 @@ class Product(models.Model):
     ]
 
     category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
-    name = models.CharField(max_length=200)
+    product_name = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200)
     image = models.ImageField(upload_to='products/%Y/%m/%d', blank=True)
     description = models.TextField(blank=True)
@@ -79,15 +79,15 @@ class Product(models.Model):
     # 소비기한
 
     class Meta:
-        ordering = ['name']
+        ordering = ['product_name']
         indexes = [
             models.Index(fields=['id', 'slug']),
-            models.Index(fields=['name']),
+            models.Index(fields=['product_name']),
             models.Index(fields=['-created']),
         ]
 
     def __str__(self):  # 상품명 문자열로 출력
-        return self.name
+        return self.product_name
 
     def get_absolute_url(self): # 절대경로
         return reverse('shop:product_detail', args=[self.id, self.slug])

@@ -9,7 +9,7 @@
     <style>
         .header-top {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
             align-items: center;
             padding: 10px 0;
         }
@@ -66,56 +66,82 @@
 <body>
     <header>
         <!-- 상단 회원가입, 로그인, 고객센터 -->
-        <div class="header-top container">
-            <div class="d-flex gap-3">
-                <a href="#">회원가입</a>
-                <a href="#">로그인</a>
-                <a href="#">고객센터</a>
+        <div style="position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; background-color: #fff;"> <!-- 상단에 고정시키는 역할 -->
+            <div class="header-top container">
+                {% if user.is_authenticated %}
+                <div class="d-flex gap-3">
+                    {% if user.is_owner %}
+                    <a href="#"> 판매자 탭 </a>
+                    {% endif %}
+                    <div class="dropdown"> <!-- 드롭다운으로 하위항목 -->
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ user.first_name }} 님 <!-- !!!모델에 따라 변경할것!!! -->
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <li><a class="dropdown-item" href="#">마이페이지</a></li>
+                            <li><a class="dropdown-item" href="#">주문내역</a></li>
+                            <li><a class="dropdown-item" href="#">로그아웃</a></li>
+                        </ul>
+                    </div>
+                    <a href="#">고객센터</a>
+                </div>
+                {% else %}
+                <div class="d-flex gap-3">
+                    <a href="#">회원가입</a>
+                    <a href="#">로그인</a>
+                    <a>고객센터</a>
+                </div>
+                {% endif %}
             </div>
+        
+            <!-- 중앙 로고, 검색창, 장바구니 등 -->
+            <div class="header-bottom container">
+                <!-- 로고 영역 -->
+                <div class="logo">
+                    <p>
+                        <a href="/">
+                            <img src="{% static 'img/logo.png' %}" width="90" height="60">
+                        </a>
+                        <a href="/" class="">마켓컬리</a>
+                        |
+                        <a href="/" class="">뷰티컬리</a>
+                    </p>
+                </div>
+            
+                <!-- 검색창 영역 -->
+                <div class="search-bar">
+                    <input type="text" placeholder="검색어를 입력해주세요" class="form-control">
+                    <button><i class="bi bi-search"></i> 🔍</button>
+                </div>
+            
+                <!-- 기타 아이콘 (배송지, 찜목록, 장바구니) -->
+                <div class="d-flex gap-3">
+                    <p>배송지등록</p>
+                    <p>찜목록</p>
+                    <a href="{% url 'cart:cart_detail' %}">장바구니</a>
+                </div>
+            </div>
+        
+            <!-- 네비게이션 메뉴 -->
+            <nav class="nav-menu container" style="padding: 10px;">
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="{% url 'shop:product_list' %}">카테고리</a></li>
+                    <li class="nav-item"><a>신상품</a></li>
+                    <li class="nav-item"><a>베스트</a></li>
+                    <li class="nav-item"><a>알뜰쇼핑</a></li>
+                    <li class="nav-item"><a>특가/혜택</a></li>
+                    <li class="nav-item"><a>샛별배송안내</a></li>
+                </ul>
+            </nav>
         </div>
-    
-        <!-- 중앙 로고, 검색창, 장바구니 등 -->
-        <div class="header-bottom container">
-            <!-- 로고 영역 -->
-            <div class="logo">
-                <p>
-                    로고 이미지
-                    <a href="/" class="">마켓컬리</a>
-                    <a href="/" class="">뷰티컬리</a>
-                </p>
-            </div>
-    
-            <!-- 검색창 영역 -->
-            <div class="search-bar">
-                <input type="text" placeholder="검색어를 입력해주세요" class="form-control">
-                <button><i class="bi bi-search"></i> 🔍</button>
-            </div>
-    
-            <!-- 기타 아이콘 (배송지, 찜목록, 장바구니) -->
-            <div class="d-flex gap-3">
-                <p>배송지등록</p>
-                <p>찜목록</p>
-                <a href="{% url 'cart:cart_detail' %}">장바구니</a>
-            </div>
-        </div>
-    
-        <!-- 네비게이션 메뉴 -->
-        <nav class="nav-menu container">
-            <ul>
-                <li><a href="{% url 'shop:product_list' %}">카테고리</a></li>
-                <li><a href="#">신상품</a></li>
-                <li><a href="#">베스트</a></li>
-                <li><a href="#">알뜰쇼핑</a></li>
-                <li><a href="#">특가/혜택</a></li>
-                <li><a href="#">샛별배송안내</a></li>
-            </ul>
-        </nav>
     </header>
-    <div id="">  <!-- 상단부 아래에 보일 부분 -->
+    <div id="" style="padding: 250px;">  <!-- 상단부 아래에 보일 부분 -->
         {% block content %}
         {% endblock %}
     </div>
 
-    <script src="{% static 'js/bootstrap.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9gyb+VrA6Xl8/dpW3c5i3z1i6P8rj0ANtxhB8pVPqV1z3G5L7s" crossorigin="anonymous"></script>
+    <!-- <script src="{% static 'js/bootstrap.js' %}"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-QR4MHA5zKpNqhtI5vvPhCffoZEFSgsPHV3s7NUB6Y5N5IhtlLBC8I/FKAc7kUic/" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -6,57 +6,99 @@
 {% endblock %}
 
 {% block content %}
-<h1>Your shopping cart</h1>
-<table>
-    <thead>
-        <tr>
-            <th>Image</th>
-            <th>Product</th>
-            <th>Quantity</th>
-            <th>Remove</th>
-            <th>Unit price</th>
-            <th>Price</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for item in cart %}
-            {% with product=item.product %}
-                <tr>
-                    <td>
-                        <a href="{{ product.get_absolute_url }}">
-                            <img src="{% if product.image %}{{ product.image.url }}
-                                        {% else %}{% static 'img/no_image.png' %}{% endif %}">
-                        </a>
-                    </td>
-                    <td>{{ product.name }}</td>
-                    <td>
-                        <form action="{% url 'cart:cart_add' product.id %}" method="post">
-                            <input type="submit" name="action" value="-">
-                            {{ item.quantity}}
-                            <input type="submit" name="action" value="+">
+<div style="background-color: paleturquoise;">
+<div class="text-center"><!-- 가운데정렬  -->
+    <h1>장바구니</h1>
+</div>
+<div class="container py-4">
+    <!-- Flexbox를 사용하여 좌우로 나란히 배치 -->
+    <div class="d-flex justify-content-between">
+        <!-- 왼쪽 영역: 상품 목록 -->
+        <div class="card w-75 me-3">
+
+            <div class="card-header">
+                <input type="checkbox"> 전체 선택 {{ 0 }}/{{ 0 }}
+            </div>
+
+            <div class="card-body">
+                <!-- ifchanged 태그를 사용하여 delivery와 packaging이 바뀔 때만 출력 -->
+                {% for item in sorted_cart %}
+                    <!-- 배송방식이 바뀔 때만 출력 -->
+                    {% ifchanged item.product.delivery %}
+                        <h3>{{ item.product.delivery }}</h3>
+                    {% endifchanged %}
+
+                    <!-- 포장방식이 바뀔 때만 출력 -->
+                    {% ifchanged item.product.packaging %}
+                        {% if item.product.packaging == '상온' %}
+                            <h6 style="color: coral;">🔆{{ item.product.packaging }} 상품</h6>
+                        {% elif item.product.packaging == '냉장' %}
+                            <h6 style="color: rgb(45, 96, 236);">💧{{ item.product.packaging }} 상품</h6>
+                        {% elif item.product.packaging == '냉동' %}
+                            <h6 style="color: rgb(84, 246, 255);">❄️{{ item.product.packaging }} 상품</h6>
+                        {% endif %}
+                    {% endifchanged %}
+
+                    <!-- 상품명 및 이미지 출력 -->
+                    <div>{{ item.product.product_name }}</div>
+                    <div style="float: right;">
+                        <form action="{% url 'cart:cart_remove' item.product.id %}" method="post"> <!-- 제거버튼 -->
                             {% csrf_token %}
+                            <button type="submit">X</button>
                         </form>
-                    </td>
-                    <td>
-                        <form action="{% url 'cart:cart_remove' product.id %}" method="post">
-                            <input type="submit" value="Remove">
-                            {% csrf_token %}
-                        </form>
-                    </td>
-                    <td class="num">${{ item.price }}</td>
-                    <td class="num">${{ item.total_price }}</td>
-                </tr>
-            {% endwith %}
-        {% endfor %}
-        <tr class="total">
-            <td>Total</td>
-            <td colspan="4"></td>
-            <td class="num">${{ cart.get_total_price }}</td>
-        </tr>
-    </tbody>
-</table>
-<p class="text-right">
-    <a href="{% url 'shop:product_list' %}" class="button light">Continue shopping</a>
-    <!-- 오더와 체크아웃 부분 추가해야함. -->>
-</p>
+                    </div>
+                    <div class="d-flex justify-content-between" style="margin-left: 20px; margin-right: 20px;">
+                        <div class="flex-grow-2" style="flex-basis: 30%;">
+                            <a href="{{ item.product.get_absolute_url }}">
+                                <img src="{% if item.product.image %}{{ item.product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}" width="90" height="60">
+                            </a>
+                        </div>
+                        <div class="flex-grow-2" style="flex-basis: 70%;">
+                            <form action="{% url 'cart:cart_update' item.product.id %}" method="post">
+                                {% csrf_token %}
+                                <input type="submit" name="action" value="-">
+                                {{ item.quantity }}
+                                <input type="submit" name="action" value="+">
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+                {% if not cart %}
+                    <div style="text-align : center;">
+                        <img src="{% static 'img/nothing_in_cart.png' %}" width="600" height="450">
+                    </div>
+                {% endif %}
+            </div>
+            <div class="card-footer">
+                상품 {{ cart.get_total_price }}원 + 배송비 무료<br>
+                <strong>총 결제금액: {{ cart.get_total_price }}원</strong> <!-- 배송비 생긴다면 추가하기 -->
+            </div>
+        </div>
+
+        <!-- 오른쪽 영역: 결제 정보 -->
+        <div class="card w-25">
+            <div class="card-body">
+                <h5 class="card-title">결제 금액</h5>
+                <p>상품 금액: {{ cart.get_total_price }}원</p>
+                <p>상품 할인 금액: 0원</p>
+                <p>배송비: 0원</p>
+                <hr>
+                <p>결제 예정 금액: {{ cart.get_total_price }}원</p>
+                <button type="button" class="">
+                    {% csrf_token %}
+                    {% if user.is_authenticated %}
+                        {% if not cart %}
+                            <a href="#">상품을 담아주세요</a>
+                        {% else %}
+                        <a href="#">주문하기</a>
+                        {% endif %}
+                    {% else %}
+                        <a href="#">로그인</a>
+                    {% endif %}
+                </button>  
+            </div>
+        </div>
+    </div>
+</div>
+</div>
 {% endblock %}
