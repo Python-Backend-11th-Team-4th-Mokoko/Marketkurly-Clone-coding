@@ -61,14 +61,3 @@ def product_detail(request, id, slug):
     # 상품정보를 보내 렌더링
     return render(request, 'shop/product/detail.html',
                   {'product': product, 'cart_product_form': form, 'total_price': total_price, 'updated_quantity': updated_quantity})
-
-
-    # ### 수량 조절
-    # if request.method == 'POST':
-    #     if cart_product_form.is_valid():
-    #         if request.POST.get('action') == 'add':
-    #             cart_product_form.add_quantity(request)
-    #         elif request.POST.get('action') == 'subtract':
-    #             cart_product_form.subtract_quantity(request)
-
-    # product_quantity = cart_product_form.cleaned_data['quantity']

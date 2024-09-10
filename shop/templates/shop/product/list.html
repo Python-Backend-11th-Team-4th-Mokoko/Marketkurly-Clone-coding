@@ -31,9 +31,26 @@
                         <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}" width="320" height="210">
                     </a>
                     <br>
-                    <a href=""><!-- 장바구니에 담는 기능 팝업 -->
-                        <button>담기</button>
-                    </a>
+                    <!-- 장바구니에 담는 기능 팝업 -->
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#to-cart">담기</button>
+                        <div class="modal fade" id="to-cart" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">
+                                            <img src="">
+                                        </h5>
+                                    </div>
+                                <div class="modal-body">
+                                  여기에 작은 페이지의 내용을 넣을 수 있습니다.
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                                  <button type="button" class="btn btn-primary">장바구니 담기</button>
+                                </div>
+                              </div>
+                            </div>
+                        </div>
                     <br>
                     <a href="{{ product.get_absolute_url }}">{{ product.product_name }}</a><!-- 디테일로 이동 -->
                     <br>
