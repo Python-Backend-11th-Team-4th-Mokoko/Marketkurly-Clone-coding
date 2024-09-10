@@ -14,9 +14,10 @@ class Category(models.Model):
         ('furniture-interior','가구·인테리어'),
         ('pet','반려동물'),
     ]
-
+    
     name = models.CharField(max_length=200, choices=NAME)
     slug = models.SlugField(max_length=200, unique=True)
+    # parent = models.ForeignKey('self', on_delete=models.CASCADE, related_name='subcategories', blank=True, null=True)
 
     ### 상기한 한글 이슈 -> slug값에 db 'name'필드의 값을 지정해서 저장
     def save(self, *args, **kwargs):
@@ -60,7 +61,7 @@ class Product(models.Model):
     ]
 
     category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
-    name = models.CharField(max_length=200)
+    product_name = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200)
     image = models.ImageField(upload_to='products/%Y/%m/%d', blank=True)
     description = models.TextField(blank=True)
@@ -79,15 +80,15 @@ class Product(models.Model):
     # 소비기한
 
     class Meta:
-        ordering = ['name']
+        ordering = ['product_name']
         indexes = [
             models.Index(fields=['id', 'slug']),
-            models.Index(fields=['name']),
+            models.Index(fields=['product_name']),
             models.Index(fields=['-created']),
         ]
 
     def __str__(self):  # 상품명 문자열로 출력
-        return self.name
+        return self.product_name
 
     def get_absolute_url(self): # 절대경로
         return reverse('shop:product_detail', args=[self.id, self.slug])

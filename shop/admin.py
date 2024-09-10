@@ -7,12 +7,12 @@ from shop.models import Category, Product
 @admin.register(Category)
 class CetegoryAdmin(admin.ModelAdmin):
     list_display = ['name', 'slug']
-    # prepopulated_fields = {'slug': ('name',)} 
+    prepopulated_fields = {'slug': ('name',)} 
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['name', 'slug', 'price', 'stock', 'available', 'delivery', 'packaging', 'created', 'updated']
+    list_display = ['product_name', 'slug', 'price', 'stock', 'available', 'delivery', 'packaging', 'created', 'updated']
     list_filter = ['stock', 'available', 'created', 'updated', 'delivery']
     list_editable = ['price', 'stock', 'available']
-    prepopulated_fields = {'slug': ('name',)} # 자동완성 영역
+    prepopulated_fields = {'slug': ('product_name',)} # 자동완성 영역
 

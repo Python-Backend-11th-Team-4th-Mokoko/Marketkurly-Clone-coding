@@ -1,0 +1,9 @@
+{% autoescape off %}
+안녕하세요, {{ user.name }}님.
+
+아이디를 찾기 위한 인증 절차를 진행하시려면 아래 링크를 클릭해주세요:
+
+http://{{ domain }}/activate/{{ uid }}/{{ token }}
+
+감사합니다.
+{% endautoescape %}

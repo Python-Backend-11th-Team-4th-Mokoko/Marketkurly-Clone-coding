@@ -2,25 +2,16 @@
 {% load static %}
 
 {% block title %}
-    {% if category %}{{ category.name }}{% else %}Products{% endif %}
+    New Products
 {% endblock %}
 
 
 {% block content %}
-<div> <!-- 카테고리 버튼들 -->
-    <!-- <li> 이부분은 서브카테고리 만들었을 때 전체보기 가능하도록 할 자리 </li> -->
-    {% for c in categories %}
-        <li {% if category.slug == c.slug %}class="selected"{% endif %}>
-            <a href="{{ c.get_absolute_url }}">{{ c.get_name_display }}</a>
-        </li>
-    {% endfor %}
-</div>
-
 <div class="d-flex justify-content-between">
     <div class="flex-grow-1" style="flex-basis: 30%;"> <!-- 왼쪽 필터 -->
         <div class="p-3">
             필터링
-            <form method="post">
+            <form method="post"></form>
                 {% csrf_token %}
                 <!-- 배송방식 -->
                 <label for="delivery">배송 방식:</label>
@@ -47,32 +38,15 @@
     </div>
     <div class="flex-grow-1" style="flex-basis: 70%;"><!-- 상품 리스트 -->
         <div class="p-3">
-            {% for product in products %}
+            {% for product in new_products %}
                 <div>
                     <a href="{{ product.get_absolute_url }}"><!-- 디테일로 이동 -->
                         <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}" width="320" height="210">
                     </a>
                     <br>
-                    <!-- 장바구니에 담는 기능 팝업(미구현) -->
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#to-cart">담기</button>
-                        <div class="modal fade" id="to-cart" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">
-                                            <img src="">
-                                        </h5>
-                                    </div>
-                                <div class="modal-body">
-                                  <p>Ajax 기능 필요</p>
-                                </div>
-                                <div class="modal-footer">
-                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                                  <button type="button" class="btn btn-primary">장바구니 담기</button>
-                                </div>
-                              </div>
-                            </div>
-                        </div>
+                    <a href=""><!-- 장바구니에 담는 기능 팝업 -->
+                        <button>담기</button>
+                    </a>
                     <br>
                     <a href="{{ product.get_absolute_url }}">{{ product.product_name }}</a><!-- 디테일로 이동 -->
                     <br>

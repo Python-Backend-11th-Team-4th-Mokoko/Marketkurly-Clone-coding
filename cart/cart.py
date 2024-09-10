@@ -1,5 +1,6 @@
 from decimal import Decimal
 from django.conf import settings
+from django.shortcuts import redirect
 
 from shop.models import Product
 

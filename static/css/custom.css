@@ -1,0 +1,64 @@
+.header-top {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.header-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+
+.nav-menu ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-menu ul li {
+    display: inline;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    border: 1px solid #7c3aed;
+    border-radius: 20px;
+    padding: 5px;
+}
+
+.search-bar input {
+    border: none;
+    outline: none;
+}
+
+.search-bar button {
+    background-color: transparent;
+    border: none;
+    color: #7c3aed;
+}
+
+a {
+    text-decoration: none;
+    color: #7c3aed;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* 드롭다운 메뉴를 기본적으로 숨김 */
+.dropdown-menu {
+  display: none;
+}
+
+/* 드롭다운 상태일 때 표시 */
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
