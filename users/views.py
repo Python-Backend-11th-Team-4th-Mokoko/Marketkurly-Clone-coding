@@ -29,8 +29,9 @@ def login(request):
     return render(request, 'users/login.html',content)
 
 def logout(request):
+    next_page = request.GET.get('next', '/') # 로그아웃 전에 현재 페이지의 URL을 얻음
     app_logout(request)
-    return redirect('shop:home')
+    return redirect(next_page)
 
 def signup(request):
     if request.method == 'POST':

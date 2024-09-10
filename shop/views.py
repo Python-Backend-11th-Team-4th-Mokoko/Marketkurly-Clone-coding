@@ -61,7 +61,8 @@ def product_list(request, category_slug=None):
 
     # 카테고리, 모든 카테고리, 상품 정보를 보내 렌더링
     return render(request, 'shop/product/list.html',
-                  {'category': category, 'categories': categories, 'products': products, 'cart_product_form': cart_product_form, 'form': form})
+                  {'category': category, 'categories': categories, 
+                   'products': products, 'cart_product_form': cart_product_form, 'form': form})
 
 
 ### 신상품
@@ -104,12 +105,14 @@ def new_products(request):
     else:
         form = ProductFilterForm()
 
-    return render(request, 'shop/product/new_products.html', {'categories': categories, 'new_products': new_products, 'form': form})
+    return render(request, 'shop/product/new_products.html', 
+                  {'categories': categories, 'new_products': new_products, 'form': form})
 
 
 
 # 상품 정보
 def product_detail(request, id, slug):
+    categories = Category.objects.all() ### 이게 있어야 이쪽 페이지에서도 카테고리 목록이 열림
     product = get_object_or_404(Product, id=id, slug=slug, available=True)
     total_price = product.price
     updated_quantity = None
@@ -142,4 +145,6 @@ def product_detail(request, id, slug):
 
     # 상품정보를 보내 렌더링
     return render(request, 'shop/product/detail.html',
-                  {'product': product, 'cart_product_form': form, 'total_price': total_price, 'updated_quantity': updated_quantity})
+                  {'product': product, 'cart_product_form': form, 
+                   'total_price': total_price, 'updated_quantity': updated_quantity, 
+                   'categories': categories})

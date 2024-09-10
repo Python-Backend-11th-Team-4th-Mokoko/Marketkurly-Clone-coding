@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
 
-from shop.models import Product
+from shop.models import Product, Category
 from cart.cart import Cart
 from cart.forms import CartAddProductForm
 
@@ -61,8 +61,9 @@ def cart_update(request, product_id):
 
 ### 카트 표현부분
 def cart_detail(request):
+    categories = Category.objects.all() ### 이게 있어야 이쪽 페이지에서도 카테고리 목록이 열림
     cart = Cart(request)
     ### 카트 내용을 정렬: delivery 기준으로 먼저 정렬하고, 그 다음 packaging 기준으로 정렬
     sorted_cart = sorted(cart, key=lambda item: (item['product'].delivery, item['product'].packaging))
 
-    return render(request, 'cart/detail.html', {'cart': cart, 'sorted_cart': sorted_cart})
+    return render(request, 'cart/detail.html', {'cart': cart, 'sorted_cart': sorted_cart, 'categories': categories})
