@@ -10,8 +10,10 @@ from shop.forms import ProductFilterForm
 ### 홈 페이지
 def home_page(request):
     categories = Category.objects.all()
+    # 랜덤하게 4개의 상품을 가져옴
+    products = Product.objects.filter(available=True).order_by('?')[:4]
 
-    return render(request, 'shop/home.html', {'categories': categories})
+    return render(request, 'shop/home.html', {'categories': categories, 'products': products})
 
 
 # 상품 리스트
