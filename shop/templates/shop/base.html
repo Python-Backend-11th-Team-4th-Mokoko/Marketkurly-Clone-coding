@@ -24,7 +24,16 @@
                 {% if user.is_authenticated %}
                 <div class="d-flex gap-3">
                     {% if user.is_owner %}
-                    <a href="#"> 판매자 탭 </a>
+                        <div class="dropdown"> <!-- 드롭다운으로 하위항목 -->
+                            <button class="btn btn-secondary dropdown-toggle" type="button" >
+                                판매자 탭
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <li><a class="dropdown-item" href="{% url 'orders:product_create' %}">상품 등록</a></li>
+                                <li><a class="dropdown-item" href="{% url 'orders:product_seller' user.name %}">내 상품 목록</a></li>
+                                <li><a class="dropdown-item" href="">ㅇㅇ</a></li>
+                            </ul>
+                        </div>
                     {% endif %}
                     <div class="dropdown"> <!-- 드롭다운으로 하위항목 -->
                         <button class="btn btn-secondary dropdown-toggle" type="button" > <!-- id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" -->

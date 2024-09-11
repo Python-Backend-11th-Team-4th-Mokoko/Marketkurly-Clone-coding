@@ -23,31 +23,31 @@
         <table>
             <tr>
                 <td style="margin: 10px;">배송</td>
-                <td style="margin: 10px;">{{ product.delivery }}</td>
+                <td style="margin: 10px;">&nbsp;&nbsp;{{ product.delivery }}</td>
             </tr>
             <tr>
                 <td style="margin: 10px;">판매자</td>
-                <td style="margin: 10px;">컬리</td>
+                <td style="margin: 10px;">&nbsp;&nbsp;{{ product.seller }}</td>
             </tr>
             <tr>
                 <td style="margin: 10px;">포장타입</td>
-                <td style="margin: 10px;">{{ product.packaging }}</td>
+                <td style="margin: 10px;">&nbsp;&nbsp;{{ product.packaging }}</td>
             </tr>
             <tr>
                 <td style="margin: 10px;">판매단위</td>
-                <td style="margin: 10px;">상품따라 다름(상자or개or판 등)</td>
+                <td style="margin: 10px;">&nbsp;&nbsp;?</td>
             </tr>
             <tr>
                 <td style="margin: 10px;">중량/용량</td>
-                <td style="margin: 10px;">?</td>
+                <td style="margin: 10px;">&nbsp;&nbsp;?</td>
             </tr>
             <tr>
                 <td style="margin: 10px;">소비기한</td>
-                <td style="margin: 10px;">??</td>
+                <td style="margin: 10px;">&nbsp;&nbsp;??</td>
             </tr>
             <tr>
                 <td style="margin: 10px;">안내사항</td>
-                <td style="margin: 10px;">???</td>
+                <td style="margin: 10px;">&nbsp;&nbsp;???</td>
             </tr>
         </table>
         
@@ -57,15 +57,17 @@
             <table>
                 <tr>
                     <td>상품선택</td>
+                    &nbsp;&nbsp;
                     <td colspan="4">
+                        &nbsp;&nbsp;&nbsp;
                         <input type="submit" name="action" value="-">
-                        {{ cart_product_form.quantity }}
+                            {{ cart_product_form.quantity }}
                         <input type="submit" name="action" value="+">
                     </td>
                 </tr>
                 <tr>
                     <td colspan="5">
-                        <p>총 가격 {{ total_price }}원</p>
+                        <p>총 가격&nbsp;&nbsp;{{ total_price }}원</p>
                     </td>
                 </tr>
                 <tr>

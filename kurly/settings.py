@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'users',
     'shop',
     'cart',
+    'orders',
 ]
 
 
@@ -135,10 +136,12 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+# 이메일 송신을 위한 설정
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 'smtp.naver.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'your_email@gmail.com'
-EMAIL_HOST_PASSWORD = 'your_email_password'
+EMAIL_HOST_USER = 'cw9094@naver.com'
+EMAIL_HOST_PASSWORD = 'leechowoo12'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

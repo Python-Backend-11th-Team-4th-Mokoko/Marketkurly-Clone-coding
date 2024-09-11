@@ -12,12 +12,16 @@ def home_page(request):
     categories = Category.objects.all()
     # 랜덤하게 4개의 상품을 가져옴
     products = Product.objects.filter(available=True).order_by('?')[:4]
+    all_products = Product.objects.all()
 
-    return render(request, 'shop/home.html', {'categories': categories, 'products': products})
+    return render(request, 'shop/home.html', 
+                  {'categories': categories, 'products': products, 
+                   'all_products': all_products})
 
 
 # 상품 리스트
 def product_list(request, category_slug=None):
+    all_products = Product.objects.all()
     category = None # 안정성을 위해 None 할당
     categories = Category.objects.all()
     products = Product.objects.filter(available=True)
@@ -64,11 +68,13 @@ def product_list(request, category_slug=None):
     # 카테고리, 모든 카테고리, 상품 정보를 보내 렌더링
     return render(request, 'shop/product/list.html',
                   {'category': category, 'categories': categories, 
-                   'products': products, 'cart_product_form': cart_product_form, 'form': form})
+                   'products': products, 'cart_product_form': cart_product_form,
+                   'form': form, 'all_products': all_products})
 
 
 ### 신상품
 def new_products(request):
+    all_products = Product.objects.all()
     categories = Category.objects.all() ### 이게 있어야 이쪽 페이지에서도 카테고리 목록이 열림
 
     one_week_ago = timezone.now() - timedelta(days=7) # 1주일 이내의 상품만
@@ -108,12 +114,13 @@ def new_products(request):
         form = ProductFilterForm()
 
     return render(request, 'shop/product/new_products.html', 
-                  {'categories': categories, 'new_products': new_products, 'form': form})
+                  {'categories': categories, 'new_products': new_products, 'form': form, 'all_products': all_products})
 
 
 
 # 상품 정보
 def product_detail(request, id, slug):
+    all_products = Product.objects.all()
     categories = Category.objects.all() ### 이게 있어야 이쪽 페이지에서도 카테고리 목록이 열림
     product = get_object_or_404(Product, id=id, slug=slug, available=True)
     total_price = product.price
@@ -149,4 +156,5 @@ def product_detail(request, id, slug):
     return render(request, 'shop/product/detail.html',
                   {'product': product, 'cart_product_form': form, 
                    'total_price': total_price, 'updated_quantity': updated_quantity, 
-                   'categories': categories})
+                   'categories': categories,
+                   'all_products': all_products})

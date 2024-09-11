@@ -1,0 +1,19 @@
+{% extends "shop/base.html" %}
+
+{% block title %}
+  Checkout
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h1>주문이 접수되었습니다!</h1>
+    </div>
+    <div class="card-body">
+        <a href="{% url 'shop:product_list' %}">다른 상품 보기</a>
+        <br>
+        <!-- 'orders:order_history' 구매 내역 보기 -->
+    </div>
+</div>
+
+{% endblock %}

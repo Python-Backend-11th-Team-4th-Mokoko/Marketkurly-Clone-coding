@@ -72,6 +72,7 @@ class Product(models.Model):
     packaging = models.CharField(max_length=10, choices=PACKAGING)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    seller = models.CharField(max_length=200, blank=False, default='컬리') #판매자 정보
     
     
     # 판매자: seller 

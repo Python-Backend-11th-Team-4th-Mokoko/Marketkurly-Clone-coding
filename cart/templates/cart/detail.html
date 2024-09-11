@@ -92,7 +92,9 @@
                         {% if not cart %}
                             <a>상품을 담아주세요</a>
                         {% else %}
-                        <a href="#">주문하기</a>
+                        <a href="{% url 'orders:order_create' %}">
+                            주문하기
+                        </a>
                         {% endif %}
                     {% else %}
                         <a href="{% url 'users:login' %}">로그인</a>

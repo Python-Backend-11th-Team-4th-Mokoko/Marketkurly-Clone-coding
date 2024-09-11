@@ -11,8 +11,7 @@ class CetegoryAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['product_name', 'slug', 'price', 'stock', 'available', 'delivery', 'packaging', 'created', 'updated']
-    list_filter = ['stock', 'available', 'created', 'updated', 'delivery']
+    list_display = ['category', 'product_name', 'slug', 'price', 'stock', 'available', 'delivery', 'packaging', 'seller', 'created', 'updated']
+    list_filter = ['stock', 'available', 'seller', 'created', 'updated']
     list_editable = ['price', 'stock', 'available']
     prepopulated_fields = {'slug': ('product_name',)} # 자동완성 영역
-
