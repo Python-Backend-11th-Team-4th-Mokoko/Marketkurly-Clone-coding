@@ -95,3 +95,38 @@ def product_update(request, pk):
     else:
         form = ProductForm(instance=product)
         return render(request, 'orders/product_form.html', {'form': form})
+    
+
+# 판매자가 상품 구매 내역 확인
+def sold_history(request):
+    if request.user.is_authenticated:
+        # 현재 사용자가 판매자로 등록한 상품
+        seller_products = Product.objects.filter(seller=request.user)
+        # 상품에 대한 주문 항목
+        order_items = Ordereditem.objects.filter(product__in=seller_products)
+        orders = Order.objects.filter(ordereditem__in=order_items).distinct() #중복된 것 제거
+
+        context = {
+            'orders': orders,
+        }
+    else:
+        context = {
+            'orders': [],
+            'message': '로그인 후 구매 내역을 확인할 수 있습니다.'
+        }
+    
+    return render(request, 'orders/sold_history.html', context)
+
+# 주문 내역
+def order_history(request):
+    if not request.user.is_authenticated:
+        return redirect('users:login')  # 로그인하지 않은 경우 로그인 페이지로 리다이렉트
+
+    # 사용자의 주문 목록
+    orders = Order.objects.filter(customer=request.user)
+
+    context = {
+        'orders': orders,
+    }
+
+    return render(request, 'orders/order_history.html', context)

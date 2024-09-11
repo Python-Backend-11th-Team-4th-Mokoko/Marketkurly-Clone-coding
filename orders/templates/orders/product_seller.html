@@ -164,14 +164,14 @@
     <ul>
         {% for product in products %}
             <li>
-                <p>제목: <a href="{{ product.get_absolute_url }}">{{ product.product_name }}</a></p>
+                <p>상품명: <a href="{{ product.get_absolute_url }}">{{ product.product_name }}</a></p>
                 <p>가격: {{product.price}}</p>
                 <p>설명: {{product.description}}</p>
+                <a href="{% url 'orders:sold_history' %}"><p>구매자 목록</p></a>
                 <a href="{% url 'orders:product_update' product.pk %}"><button class="button">수정</button></a>
                 <button class="button" onclick="confirmDelete('{% url 'orders:product_delete' product.pk %}')">삭제</button>
             </li>
         {% endfor %}
     </ul>
-    
 </body>
 </html>

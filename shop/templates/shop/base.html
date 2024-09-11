@@ -31,7 +31,6 @@
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <li><a class="dropdown-item" href="{% url 'orders:product_create' %}">상품 등록</a></li>
                                 <li><a class="dropdown-item" href="{% url 'orders:product_seller' user.name %}">내 상품 목록</a></li>
-                                <li><a class="dropdown-item" href="">ㅇㅇ</a></li>
                             </ul>
                         </div>
                     {% endif %}
@@ -41,7 +40,7 @@
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <li><a class="dropdown-item" href="#">마이페이지</a></li>
-                            <li><a class="dropdown-item" href="#">주문내역</a></li>
+                            <li><a class="dropdown-item" href="{% url 'orders:order_history' %}">주문내역</a></li>
                             <li><a class="dropdown-item" href="{% url 'users:update_user' %}">회원정보수정</a></li>
                             <li><a class="dropdown-item" href="{% url 'users:del_user' %}">회원탈퇴</a></li>
                             <li><a class="dropdown-item" href="{% url 'users:logout' %}">로그아웃</a></li>
@@ -82,7 +81,7 @@
                 <div class="d-flex gap-3">
                     <p>배송지등록</p>
                     <p>찜목록</p>
-                    <a href="{% url 'cart:cart_detail' %}">장바구니</a>
+                    <a href="{% url 'cart:cart_detail' %}">장바구니({{ cart_item_count }})</a>
                 </div>
             </div>
         
