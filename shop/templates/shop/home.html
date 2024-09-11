@@ -11,10 +11,11 @@
 <div class="container my-5">
     <div class="splide" role="group" aria-label="제품 슬라이더">
         <div class="splide__track">
-            {% for product in products %}
+            
             <ul class="splide__list">
                 
                 <li class="splide__slide">
+                    {% for product in products %}
                     <div class="card">
                         <a href="{{ product.get_absolute_url }}">
                             <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}" alt="{{ product.name }}">
@@ -25,10 +26,11 @@
                             <a href="{{ product.get_absolute_url }}" class="btn btn-primary">자세히 보기</a>
                         </div>
                     </div>
+                    {% endfor %}
                 </li>
                 
             </ul>
-            {% endfor %}
+            
         </div>
     </div>
 </div>

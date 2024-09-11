@@ -36,9 +36,9 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):    
 
     userID = models.CharField(max_length=20, primary_key=True)
-    email = models.EmailField(max_length=255, unique=True)
+    email = models.EmailField(max_length=255)
     name = models.CharField(max_length=30)
-    phone_number = models.IntegerField(unique=True, blank=False)
+    phone_number = models.IntegerField(blank=False)
     address = models.TextField(max_length=100)
     make_date = models.DateField(auto_now_add=True)
     is_owner = models.BooleanField(default=False)
