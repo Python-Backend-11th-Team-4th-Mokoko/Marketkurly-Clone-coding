@@ -1,0 +1,13 @@
+{% extends 'shop/base.html' %}
+
+{% block content %}
+<h2>회원 탈퇴</h2>
+<p>정말로 회원 탈퇴를 하시겠습니까?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">탈퇴하기</button>
+    <a href="{% url 'users:my_page' %}">취소</a>
+</form>
+{% endblock %}
+

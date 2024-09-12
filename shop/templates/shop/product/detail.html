@@ -1,0 +1,87 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block title %}
+    {{ product.product_name }}
+{% endblock %}
+
+{% block content %}
+<div class="d-flex">
+    <div class="flex-grow-1" style="flex-basis: 50%;">
+    <div class="d-flex flex-row-reverse  mx-3">
+        <!-- 상품 이미지 -->
+        <img src="{% if product.image %}{{ product.image.url }}
+                    {% else %}{% static 'img/no_image.png' %}{% endif %}"
+                    width="320" height="210">
+    </div>
+    </div>
+
+    <!-- 상품 정보 -->
+    <div class="flex-grow-1" style="flex-basis: 50%;">
+        <h1>{{ product.product_name }}</h1>
+        <p class="">{{ product.price }}원</p>
+        <table>
+            <tr>
+                <td style="margin: 10px;">배송</td>
+                <td style="margin: 10px;">&nbsp;&nbsp;{{ product.delivery }}</td>
+            </tr>
+            <tr>
+                <td style="margin: 10px;">판매자</td>
+                <td style="margin: 10px;">&nbsp;&nbsp;{{ product.seller }}</td>
+            </tr>
+            <tr>
+                <td style="margin: 10px;">포장타입</td>
+                <td style="margin: 10px;">&nbsp;&nbsp;{{ product.packaging }}</td>
+            </tr>
+            <tr>
+                <td style="margin: 10px;">판매단위</td>
+                <td style="margin: 10px;">&nbsp;&nbsp;?</td>
+            </tr>
+            <tr>
+                <td style="margin: 10px;">중량/용량</td>
+                <td style="margin: 10px;">&nbsp;&nbsp;?</td>
+            </tr>
+            <tr>
+                <td style="margin: 10px;">소비기한</td>
+                <td style="margin: 10px;">&nbsp;&nbsp;??</td>
+            </tr>
+            <tr>
+                <td style="margin: 10px;">안내사항</td>
+                <td style="margin: 10px;">&nbsp;&nbsp;???</td>
+            </tr>
+        </table>
+        
+        <!-- 가격정보 및 장바구니 담기 -->
+        <form method="post">
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <td>상품선택</td>
+                    &nbsp;&nbsp;
+                    <td colspan="4">
+                        &nbsp;&nbsp;&nbsp;
+                        <input type="submit" name="action" value="-">
+                            {{ cart_product_form.quantity }}
+                        <input type="submit" name="action" value="+">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5">
+                        <p>총 가격&nbsp;&nbsp;{{ total_price }}원</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5">
+                        <input type="hidden" name="product_id" value="{{ product.id }}">
+                        <button type="submit" name="action" value="add_to_cart">장바구니에 담기</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <div style="padding: 20px;">
+            {{ product.description|linebreaks }}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

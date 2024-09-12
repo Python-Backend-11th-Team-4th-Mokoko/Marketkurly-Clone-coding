@@ -1,0 +1,13 @@
+{% extends 'shop/base.html' %}
+
+{% block content %}
+<h1>로그인</h1>
+<form action="{% url 'users:login' %}" method = 'POST'>
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit">로그인</button>
+</form>
+<a href="{% url 'users:find_username' %}">아이디 찾기</a>
+<a>비밀번호 초기화</a>
+<a href="{% url 'shop:home' %}">돌아가기</a>
+{% endblock content%}
