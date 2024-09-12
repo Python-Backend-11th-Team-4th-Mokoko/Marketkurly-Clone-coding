@@ -37,9 +37,9 @@ def order_create(request):
             order_price=item['price'],
             order_quantity=item['quantity']
         )
-        # 재고 감소
-        product.stock -= item['quantity']  # 주문한 수량만큼 재고를 줄임
-        product.save()  # 재고를 데이터베이스에 저장
+        # # 재고 감소
+        # product.stock -= item['quantity']  # 주문한 수량만큼 재고를 줄임
+        # product.save()  # 재고를 데이터베이스에 저장
 
     # 장바구니 비우기
     cart.clear()
@@ -47,10 +47,10 @@ def order_create(request):
     # 주문 완료 페이지로 이동
     return render(request, 'orders/order_succeeded.html', {'order': order})
 
-# 상품 등록
+# 상품 등록 ### price값이 허용치를 넘었을 때의 조치가 필요
 def product_create(request):
-    if not request.user.is_authenticated:
-        return redirect('login')  # 로그인하지 않은 경우 로그인 페이지로 리다이렉트
+    if not request.user.is_owner:
+        return redirect('users:logout')  # 판매자 권한이 없으면 로그아웃 시켜버림
     
     if request.method == "POST":
         form = ProductForm(request.POST, request.FILES) #이미지 저장을 위해 필요
