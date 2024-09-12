@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.utils import timezone
+
 
 # Create your models here.
 class UserManager(BaseUserManager):    
@@ -40,7 +42,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=30)
     phone_number = models.IntegerField(blank=False)
     address = models.TextField(max_length=100)
-    make_date = models.DateField(auto_now_add=True)
+    make_date = models.DateTimeField(default=timezone.now)
     is_owner = models.BooleanField(default=False)
 
     is_staff = models.BooleanField(default=False)

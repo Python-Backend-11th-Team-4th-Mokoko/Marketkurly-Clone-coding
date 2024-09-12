@@ -46,19 +46,31 @@ def signup(request):
 
 def del_user(request):
     user = request.user
-    user.delete()
-    app_logout(request)
-    return redirect('shop:home')
+    if request.method == 'POST':
+        # POST 요청이 들어오면 사용자를 삭제하고 로그아웃 처리
+        user.delete()
+        app_logout(request)
+        return redirect('shop:home')
+    
+    # GET 요청 시에는 탈퇴 확인 페이지를 렌더링
+    return render(request, 'users/del_user_confirm.html')
 
 def update_user(request):
+    # 현재 로그인한 사용자 인스턴스를 가져옴
+    user = request.user
+
     if request.method == 'POST':
-        form = CustomUserChangeForm(request.POST)
+        form = CustomUserChangeForm(request.POST, instance=user)  # 인스턴스를 전달
         if form.is_valid():
-            form.save()
+            user_instance = form.save(commit=False)  # 사용자 인스턴스를 일단 저장하지 않고 반환
+            user_instance.make_date = user.make_date  # make_date 필드를 기존 값으로 유지
+            user_instance.save()  # 실제 저장
             return redirect('shop:home')
     else:
-        form=CustomUserChangeForm()
-    content = {'form' : form}
+        # GET 요청에서는 기존 사용자 데이터를 폼에 미리 채워서 보냄
+        form = CustomUserChangeForm(instance=user)
+
+    content = {'form': form}
     return render(request, 'users/update.html', content)
 
 def change_password(request):
@@ -112,4 +124,20 @@ def activate(request, uidb64, token):
         return HttpResponse(f'아이디는 {user.userID}입니다.')
     else:
         return HttpResponse('링크가 유효하지 않거나 만료되었습니다.')
+
+
+def my_page(request):
+    user = request.user
+    if not user.is_authenticated:
+        return redirect('users:login') 
+
+    context = {
+        'user': user,
+        'links': {
+            'update_user': 'users:update_user',  
+            'change_password': 'users:change_password', 
+            'order_history': 'shop:order_history',
+        }
+    }
+    return render(request, 'users/my_page.html', context)
 

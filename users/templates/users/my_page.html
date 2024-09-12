@@ -1,0 +1,18 @@
+{% extends 'shop/base.html' %}
+
+{% block content %}
+<h2>마이페이지</h2>
+
+<p><strong>이메일:</strong> {{ user.email }}</p>
+<p><strong>이름:</strong> {{ user.name }}</p>
+<p><strong>전화번호:</strong> {{ user.phone_number }}</p>
+<p><strong>주소:</strong> {{ user.address }}</p>
+
+<h3>계정 관리</h3>
+<ul>
+    <li><a href="{% url 'orders:order_history' %}">주문 내역 보기</a></li>
+    <li><a href="{% url 'users:update_user' %}">회원정보 수정</a></li>
+    <li><a href="{% url 'users:del_user' %}">회원탈퇴</a></li>
+    
+</ul>
+{% endblock %}

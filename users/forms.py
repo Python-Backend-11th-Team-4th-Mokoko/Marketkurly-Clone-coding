@@ -27,5 +27,9 @@ class CustomUserChangeForm(forms.ModelForm):
         self.fields['name'].required = True
         self.fields['phone_number'].required = True
 
+        # make_date 필드를 읽기 전용으로 추가
+        if 'instance' in kwargs:
+            self.fields['make_date'] = forms.DateTimeField(initial=kwargs['instance'].make_date, disabled=True)
+
 class FindUsernameForm(forms.Form):
     email = forms.EmailField(label="이메일", max_length=255)

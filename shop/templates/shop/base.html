@@ -39,7 +39,7 @@
                             {{ user.name }} 님 <!-- !!!모델에 따라 변경할것!!! -->
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <li><a class="dropdown-item" href="#">마이페이지</a></li>
+                            <li><a class="dropdown-item" href="{% url 'users:my_page' %}">마이페이지</a></li>
                             <li><a class="dropdown-item" href="{% url 'orders:order_history' %}">주문내역</a></li>
                             <li><a class="dropdown-item" href="{% url 'users:update_user' %}">회원정보수정</a></li>
                             <li><a class="dropdown-item" href="{% url 'users:del_user' %}">회원탈퇴</a></li>
