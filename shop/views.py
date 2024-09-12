@@ -75,44 +75,35 @@ def product_list(request, category_slug=None):
 ### 신상품
 def new_products(request):
     all_products = Product.objects.all()
-    categories = Category.objects.all() ### 이게 있어야 이쪽 페이지에서도 카테고리 목록이 열림
-
+    categories = Category.objects.all()
     one_week_ago = timezone.now() - timedelta(days=7) # 1주일 이내의 상품만
     new_products = Product.objects.filter(available=True, created__gte=one_week_ago).order_by('-created') #최신상품 순으로 정렬
 
     ### 조건별로 상품을 필터링
-    if request.method == 'POST':
-        form = ProductFilterForm(request.POST)
-        if form.is_valid():
-            # 배송방식 필터링
-            delivery = form.cleaned_data.get('delivery')
-            if delivery:
-                new_products = new_products.filter(delivery=delivery)
-
-            # 포장방식 필터링
-            packaging = form.cleaned_data.get('packaging')
-            if packaging:
-                new_products = new_products.filter(packaging=packaging)
-
-            # 가격 필터링
-            min_price = form.cleaned_data.get('min_price')
-            max_price = form.cleaned_data.get('max_price')
-            if min_price is not None:
-                new_products = new_products.filter(price__gte=min_price)
-            if max_price is not None:
-                new_products = new_products.filter(price__lte=max_price)
-
-            # 가격 순서 정렬
-            array = form.cleaned_data.get('array')
-            if array == '낮은가격':
-                new_products = new_products.order_by('price')  # 가격 오름차순
-            elif array == '높은가격':
-                new_products = new_products.order_by('-price')  # 가격 내림차순
-            
-            form.clean()
-    else:
-        form = ProductFilterForm()
-
+    form = ProductFilterForm(request.GET)
+    if form.is_valid():
+        # 배송방식 필터링
+        delivery = form.cleaned_data.get('delivery')
+        if delivery:
+            new_products = new_products.filter(delivery=delivery)
+        # 포장방식 필터링
+        packaging = form.cleaned_data.get('packaging')
+        if packaging:
+            new_products = new_products.filter(packaging=packaging)
+        # 가격 필터링
+        min_price = form.cleaned_data.get('min_price')
+        max_price = form.cleaned_data.get('max_price')
+        if min_price is not None:
+            new_products = new_products.filter(price__gte=min_price)
+        if max_price is not None:
+            new_products = new_products.filter(price__lte=max_price)
+        # 가격 순서 정렬
+        array = form.cleaned_data.get('array')
+        if array == '낮은가격':
+            new_products = new_products.order_by('price')  # 가격 오름차순
+        elif array == '높은가격':
+            new_products = new_products.order_by('-price')  # 가격 내림차순
+        
     return render(request, 'shop/product/new_products.html', 
                   {'categories': categories, 'new_products': new_products, 'form': form, 'all_products': all_products})
 
@@ -121,7 +112,6 @@ def new_products(request):
 # 상품 정보
 def product_detail(request, id, slug):
     all_products = Product.objects.all()
-    categories = Category.objects.all() ### 이게 있어야 이쪽 페이지에서도 카테고리 목록이 열림
     product = get_object_or_404(Product, id=id, slug=slug, available=True)
     total_price = product.price
     updated_quantity = None
@@ -156,5 +146,4 @@ def product_detail(request, id, slug):
     return render(request, 'shop/product/detail.html',
                   {'product': product, 'cart_product_form': form, 
                    'total_price': total_price, 'updated_quantity': updated_quantity, 
-                   'categories': categories,
                    'all_products': all_products})

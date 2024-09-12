@@ -106,25 +106,30 @@
     <header>
         <h1>구매자 목록</h1>
     </header>
-
+    <div>
+        &nbsp;&nbsp;&nbsp;
+        <a href="{% url 'shop:home' %}">홈으로</a>
+        &nbsp;&nbsp;&nbsp;
+        <a href="{% url 'orders:product_seller' user.name %}">내 상품 목록</a>
+    </div>
     <div class="container">
-        {% if orders %}
+        {% if order_items %}
         <table>
             <tr>
                 <th>상품 이름</th>
                 <th>구매자</th>
                 <th>구매 날짜</th>
             </tr>
-            {% for order in orders %}
+            {% for item in order_items %}
             <tr>
-                <td>{{ order.product.name }}</td>
-                <td>{{ order.customer.username }}</td>
-                <td>{{ order.order_date }}</td>
+                <td>{{ item.product.product_name }}</td>
+                <td>{{ item.order.customer.name }}</td>
+                <td>{{ item.order.order_date }}</td>
             </tr>
             {% endfor %}
         </table>
         {% else %}
-        <p>{{ message }}</p>
+        <p>주문 내역이 없습니다.</p>
         {% endif %}
     </div>
 </body>

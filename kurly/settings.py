@@ -72,6 +72,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'cart.context_processors.cart_item_count', # 카트 속 상품 수 표현
+                'shop.context_processors.all_categories', #모든 카테고리 속성
             ],
         },
     },

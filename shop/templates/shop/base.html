@@ -98,7 +98,7 @@
                             <a class="dropdown-item" href="{% url 'shop:product_list' %}">
                                 <li>전체상품</li>
                             </a>
-                            {% for c in categories %}
+                            {% for c in all_categories %}
                             <a class="dropdown-item" href="{{ c.get_absolute_url }}">
                                 <li>{{ c.get_name_display }}</li>
                             </a>

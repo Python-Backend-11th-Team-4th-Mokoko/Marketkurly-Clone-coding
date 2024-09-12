@@ -99,21 +99,14 @@ def product_update(request, pk):
 
 # 판매자가 상품 구매 내역 확인
 def sold_history(request):
-    if request.user.is_authenticated:
-        # 현재 사용자가 판매자로 등록한 상품
-        seller_products = Product.objects.filter(seller=request.user)
-        # 상품에 대한 주문 항목
-        order_items = Ordereditem.objects.filter(product__in=seller_products)
-        orders = Order.objects.filter(ordereditem__in=order_items).distinct() #중복된 것 제거
-
-        context = {
-            'orders': orders,
-        }
-    else:
-        context = {
-            'orders': [],
-            'message': '로그인 후 구매 내역을 확인할 수 있습니다.'
-        }
+    # 판매자가 등록한 상품
+    seller_products = Product.objects.filter(seller=request.user.name)
+    # 등록한 상품 중 주문되었던 것을 가져옴
+    order_items = Ordereditem.objects.filter(product__in=seller_products).select_related('order', 'product')
+    
+    context = {
+        'order_items': order_items,
+    }
     
     return render(request, 'orders/sold_history.html', context)
 
