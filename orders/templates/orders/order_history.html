@@ -1,9 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>내 주문 목록</title>
-</head>
-<body>
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block title %}
+    주문내역
+{% endblock %}
+
+{% block content %}
+
     <h1>내 주문 목록</h1>
 
     {% if orders %}
@@ -28,6 +31,6 @@
     {% else %}
         <p>주문 내역이 없습니다.</p>
     {% endif %}
-</body>
-</html>
+
+{% endblock %}
 
