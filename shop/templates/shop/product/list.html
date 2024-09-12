@@ -7,7 +7,9 @@
 
 
 {% block content %}
-<div> <!-- 카테고리 버튼들 -->
+<h2 style="text-align: center;">{{ category.get_name_display }}</h2>
+<div class="d-flex justify-content-between" style="margin-left: 100px; margin-right: 100px;"> <!-- 카테고리 버튼들 -->
+    <br>
     <!-- <li> 이부분은 서브카테고리 만들었을 때 전체보기 가능하도록 할 자리 </li> -->
     {% for c in categories %}
         <li {% if category.slug == c.slug %}class="selected"{% endif %}>
@@ -15,7 +17,7 @@
         </li>
     {% endfor %}
 </div>
-
+<br><br><br>
 <div class="d-flex justify-content-between">
     <div class="flex-grow-1" style="flex-basis: 30%;"> <!-- 왼쪽 필터 -->
         <div class="p-3">
@@ -25,22 +27,22 @@
                 <!-- 배송방식 -->
                 <label for="delivery">배송 방식:</label>
                 {{ form.delivery }}
-            
+                <br>
                 <!-- 포장방식 -->
                 <label for="packaging">포장 방식:</label>
                 {{ form.packaging }}
-            
+                <br>
                 <!-- 가격범위 -->
                 <label for="min_price">최소 가격:</label>
                 {{ form.min_price }}
-            
+                <br>
                 <label for="max_price">최대 가격:</label>
                 {{ form.max_price }}
-
+                <br>
                 <!-- 가격 순서 필터 -->
                 <label for="array">가격 순서:</label>
                 {{ form.array }}
-            
+                <br>
                 <button type="submit" class="btn btn-primary">필터링</button>
             </form>
         </div>
