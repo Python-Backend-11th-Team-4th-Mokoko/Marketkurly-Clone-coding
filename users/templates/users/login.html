@@ -8,6 +8,6 @@
     <button type="submit">로그인</button>
 </form>
 <a href="{% url 'users:find_username' %}">아이디 찾기</a>
-<a>비밀번호 초기화</a>
+<a href="{% url 'password:password_reset' %}">비밀번호 초기화</a>
 <a href="{% url 'shop:home' %}">돌아가기</a>
 {% endblock content%}
