@@ -16,19 +16,29 @@ from django.template.loader import render_to_string
 from .tokens import account_activation_token
 from .forms import FindUsernameForm
 
+from cart.cart import Cart
+
 # Create your views here.
 def login(request):
     if request.method == "POST":
-        form = AuthenticationForm(request,request.POST)
+        form = AuthenticationForm(request, request.POST)
         if form.is_valid():
             app_login(request, form.get_user())
+
+            # 로그인 시 최초 한 번만 DB에서 장바구니 정보를 세션에 병합
+            cart = Cart(request)
+            if not request.session.get('cart_merged', False):  # 병합 여부 확인
+                cart.merge_with_db()  # 병합
+                request.session['cart_merged'] = True  # 병합 처리 완료 플래그 설정
+
             return redirect('shop:home')
     else:
         form = AuthenticationForm()
-    content = {'form' : form}
-    return render(request, 'users/login.html',content)
+    return render(request, 'users/login.html', {'form': form})
 
 def logout(request):
+    cart = Cart(request)
+    cart.save_to_db()
     app_logout(request)
     return redirect('shop:home')
 
