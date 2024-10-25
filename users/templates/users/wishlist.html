@@ -1,0 +1,19 @@
+{% extends 'shop/base.html' %}
+
+{% block content %}
+<h1>찜한 상품 목록</h1>
+<ul>
+{% for item in wishlist_items %}
+    <li>
+        {{ item.product.product_name }} - {{ item.product.price }}원
+
+        <!-- 찜한 상품 제거 폼 -->
+        <form action="{% url 'users:remove_from_wishlist' item.product.id %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit">찜하기 취소</button>
+        </form>
+    </li>
+    {% endfor %}
+</ul>
+<a href="{% url 'shop:home' %}">돌아가기</a>
+{% endblock content%}

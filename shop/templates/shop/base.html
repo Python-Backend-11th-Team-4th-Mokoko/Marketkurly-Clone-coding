@@ -82,7 +82,7 @@
                 <!-- 배송지, 찜목록, 장바구니 -->
                 <div class="d-flex gap-3">
                     <p>배송지등록</p>
-                    <p>찜목록</p>
+                    <a href="{% url 'users:wishlist' %}">찜목록</a>
                     <a href="{% url 'cart:cart_detail' %}">장바구니({{ cart_item_count }})</a>
                 </div>
             </div>

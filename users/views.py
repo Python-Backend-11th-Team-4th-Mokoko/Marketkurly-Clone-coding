@@ -1,10 +1,13 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib.auth import login as app_login
 from django.contrib.auth import logout as app_logout
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
+from shop.models import Product
+from .models import Wishlist
+from django.contrib.auth.decorators import login_required
 # 이메일 인증을 위한 import
 from django.shortcuts import render, redirect
 from .models import User
@@ -151,3 +154,26 @@ def my_page(request):
     }
     return render(request, 'users/my_page.html', context)
 
+@login_required
+def wishlist(request):
+    wishlist_items = Wishlist.objects.filter(user=request.user)
+    return render(request, 'users/wishlist.html', {'wishlist_items': wishlist_items})
+
+@login_required
+def add_to_wishlist(request, product_id):
+    if request.method == 'POST':
+        product = get_object_or_404(Product, id=product_id)
+        wishlist, created = Wishlist.objects.get_or_create(user=request.user, product=product)
+
+        if created:
+            return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
+        else:
+            return HttpResponse('이미 찜한 상품입니다.')
+
+
+@login_required
+def remove_from_wishlist(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    if request.method == 'POST':
+        Wishlist.objects.filter(user=request.user, product=product).delete()
+        return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))

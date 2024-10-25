@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.utils import timezone
 
+from shop.models import Product
 
 # Create your models here.
 class UserManager(BaseUserManager):    
@@ -71,3 +72,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     #def is_staff(self):
         #return self.is_admin
 
+class Wishlist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ('user', 'product')  # 한 상품에 대해 한 번만 찜 가능
+
+    def __str__(self):
+        return f"{self.user.userID} 찜: {self.product.product_name}"
