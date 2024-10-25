@@ -40,7 +40,6 @@ class Category(models.Model):
     def get_absolute_url(self): # 절대경로 설정
         return reverse('shop:product_list_by_category', args=[self.slug])
 
-
 ### SubCategory를 만들면?
 ### parent = models.ForeignKey(Category, blank=True, related_name='children')
 ### 아마도 Product.category 의 ForeignKey 참조 영역을 바꿔야할수도?(셀프참조를 쓰면 해결?)

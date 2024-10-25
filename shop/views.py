@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from datetime import timedelta
+from sentence_transformers import SentenceTransformer
+from sklearn.metrics.pairwise import cosine_similarity
 
 from shop.models import Category, Product
 from cart.forms import CartAddProductForm
@@ -147,3 +149,75 @@ def product_detail(request, id, slug):
                   {'product': product, 'cart_product_form': form, 
                    'total_price': total_price, 'updated_quantity': updated_quantity, 
                    'all_products': all_products})
+
+
+model = SentenceTransformer('jhgan/ko-sroberta-multitask')
+
+# 검색기능
+def search_products(request):
+    query = request.GET.get('q', '')
+
+    if query:
+        # 모든 상품 정보 가져오기
+        products = Product.objects.all()
+
+        # 각 상품의 이름과 설명을 결합한 텍스트 생성
+        # 상품 텍스트 결합 시, 상품명을 두 번 포함하여 가중치 부여
+        product_texts = [f"{product.product_name} {product.product_name} {product.description}" for product in products]
+
+        # 상품 텍스트 임베딩 생성
+        product_embeddings = model.encode(product_texts)
+
+        # 사용자 검색어 임베딩 생성
+        query_embedding = model.encode([query])
+
+        # 유사도 계산 (코사인 유사도)
+        similarities = cosine_similarity(query_embedding, product_embeddings)[0]
+
+        # 유사도 정보와 함께 상품을 정렬
+        products_with_similarity = sorted(zip(products, similarities), key=lambda x: x[1], reverse=True)
+
+        # 유사도가 높은 상위 N개의 상품 반환
+        results = [product for product, similarity in products_with_similarity if similarity > 0.3]  # 유사도가 0.3 이상인 상품만
+
+    else:
+        results = []
+
+    ### 조건별로 상품을 필터링
+    if request.method == 'POST':
+        form = ProductFilterForm(request.POST)
+        if form.is_valid():
+            filtered_results = results
+
+            # 배송방식 필터링
+            delivery = form.cleaned_data.get('delivery')
+            if delivery:
+                filtered_results = [product for product in filtered_results if product.delivery == delivery]
+
+            # 포장방식 필터링
+            packaging = form.cleaned_data.get('packaging')
+            if packaging:
+                filtered_results = [product for product in filtered_results if product.packaging == packaging]
+
+            # 가격 필터링
+            min_price = form.cleaned_data.get('min_price')
+            max_price = form.cleaned_data.get('max_price')
+            if min_price is not None:
+                filtered_results = [product for product in filtered_results if product.price >= min_price]
+            if max_price is not None:
+                filtered_results = [product for product in filtered_results if product.price <= max_price]
+
+            # 가격 순서 정렬
+            array = form.cleaned_data.get('array')
+            if array == '낮은가격':
+                filtered_results = sorted(filtered_results, key=lambda product: product.price)  # 가격 오름차순
+            elif array == '높은가격':
+                filtered_results = sorted(filtered_results, key=lambda product: product.price, reverse=True)  # 가격 내림차순
+
+            # 필터링된 결과로 업데이트
+            results = filtered_results
+
+    else:
+        form = ProductFilterForm()
+
+    return render(request, 'shop/product/search_results.html', {'results': results, 'query': query, 'form': form})
