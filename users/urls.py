@@ -17,5 +17,6 @@ urlpatterns = [
     #찜 기능
     path('wishlist/add/<int:product_id>/', views.add_to_wishlist, name='add_to_wishlist'),
     path('wishlist/remove/<int:product_id>/', views.remove_from_wishlist, name='remove_from_wishlist'),
+    path('wishlist/cart/<int:product_id>/', views.wishlist_to_cart, name='wishlist_to_cart'),
     path('wishlist/', views.wishlist, name='wishlist')
 ]

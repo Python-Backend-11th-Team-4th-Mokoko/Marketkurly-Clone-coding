@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from datetime import timedelta
 from sentence_transformers import SentenceTransformer
@@ -72,6 +73,24 @@ def product_list(request, category_slug=None):
                   {'category': category, 'categories': categories, 
                    'products': products, 'cart_product_form': cart_product_form,
                    'form': form, 'all_products': all_products})
+
+@login_required
+def list_to_cart(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    
+    if request.method == 'POST':
+        form = CartAddProductForm(request.POST)
+        if form.is_valid():
+            # 폼에서 수량을 가져와 장바구니에 추가
+            quantity = form.cleaned_data['quantity']
+            cart = Cart(request)  # 세션 기반 Cart 객체 가져오기
+            cart.add(product=product, quantity=quantity)  # 장바구니에 추가
+            cart.save()  # 세션 저장
+
+        return redirect('shop:product_list')  # 상품 리스트 페이지로 리디렉션
+    else:
+        form = CartAddProductForm(initial={'quantity': 1})  # 기본 수량 1로 초기화된 폼 반환
+    return redirect('shop:product_list')
 
 
 ### 신상품

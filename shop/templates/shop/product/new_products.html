@@ -44,17 +44,52 @@
                         <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}" width="320" height="210">
                     </a>
                     <br>
-                    <a href=""><!-- 장바구니에 담는 기능 팝업 -->
-                        <button>담기</button>
-                    </a>
+                    <!-- 장바구니 담기 버튼 -->
+                    <button onclick="openPopup({{ product.id }})">담기</button>
+
+                    <!-- 장바구니 추가 팝업 창 -->
+                    <div id="popup-{{ product.id }}" class="popup" style="display: none;">
+                        <form action="{% url 'shop:list_to_cart' product.id %}" method="post">
+                            {% csrf_token %}
+                            <h3>{{ product.product_name }}</h3>
+                            <label for="quantity">수량:</label>
+                            <input type="number" id="quantity" name="quantity" value="1" min="1">
+                            <button type="submit">장바구니에 추가</button>
+                            <button type="button" onclick="closePopup({{ product.id }})">닫기</button>
+                        </form>
+                    </div>
                     <br>
-                    <a href="{{ product.get_absolute_url }}">{{ product.product_name }}</a><!-- 디테일로 이동 -->
+                    <a href="{{ product.get_absolute_url }}">{{ product.product_name }}</a>
                     <br>
                     <p>{{ product.price }}원    <br>   등록날짜:{{ product.created|date:"Y-m-d H:i" }}</p>
-                    <br>
+                    <a href="{{ product.get_absolute_url }}">{{ product.product_name }}</a><!-- 디테일로 이동 -->
                 </div>
             {% endfor %}
         </div>
     </div>
 </div>
+
+<!-- 팝업 스타일 추가 -->
+<style>
+    .popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 20px;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        z-index: 1000;
+    }
+</style>
+
+<!-- 팝업 제어 JavaScript -->
+<script>
+    function openPopup(productId) {
+        document.getElementById('popup-' + productId).style.display = 'block';
+    }
+    function closePopup(productId) {
+        document.getElementById('popup-' + productId).style.display = 'none';
+    }
+</script>
 {% endblock %}

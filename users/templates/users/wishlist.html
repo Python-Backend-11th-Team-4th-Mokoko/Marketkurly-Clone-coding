@@ -5,15 +5,58 @@
 <ul>
 {% for item in wishlist_items %}
     <li>
-        {{ item.product.product_name }} - {{ item.product.price }}원
+        <a href="{% url 'shop:product_detail' item.product.id item.product.slug %}">
+            {{ item.product.product_name }}
+        </a> - {{ item.product.price }}원
 
         <!-- 찜한 상품 제거 폼 -->
         <form action="{% url 'users:remove_from_wishlist' item.product.id %}" method="post" style="display:inline;">
             {% csrf_token %}
             <button type="submit">찜하기 취소</button>
         </form>
+
+        <!-- 장바구니담기 -->
+        <button onclick="openPopup({{ item.product.id }})">장바구니에 담기</button>
+
+        <!-- 장바구니에 추가하는 팝업 -->
+        <div id="popup-{{ item.product.id }}" class="popup" style="display: none;">
+            <form action="{% url 'users:wishlist_to_cart' item.product.id %}" method="post">
+                {% csrf_token %}
+                <h3>{{ item.product.product_name }}</h3>
+                <label for="quantity">수량:</label>
+                <input type="number" id="quantity" name="quantity" value="1" min="1">
+                
+                <button type="submit">장바구니에 추가</button>
+                <button type="button" onclick="closePopup({{ item.product.id }})">닫기</button>
+            </form>
+        </div>
     </li>
     {% endfor %}
 </ul>
 <a href="{% url 'shop:home' %}">돌아가기</a>
+
+<!-- 팝업 스타일 추가 -->
+<style>
+    .popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 20px;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        z-index: 1000;
+    }
+</style>
+
+<!-- 팝업 제어 JavaScript -->
+<script>
+    function openPopup(productId) {
+        document.getElementById('popup-' + productId).style.display = 'block';
+    }
+    function closePopup(productId) {
+        document.getElementById('popup-' + productId).style.display = 'none';
+    }
+</script>
+
 {% endblock content%}

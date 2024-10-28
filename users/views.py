@@ -20,6 +20,7 @@ from .tokens import account_activation_token
 from .forms import FindUsernameForm
 
 from cart.cart import Cart
+from cart.forms import CartAddProductForm
 
 # Create your views here.
 def login(request):
@@ -177,3 +178,23 @@ def remove_from_wishlist(request, product_id):
     if request.method == 'POST':
         Wishlist.objects.filter(user=request.user, product=product).delete()
         return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
+    
+
+@login_required
+def wishlist_to_cart(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    
+    if request.method == 'POST':
+        form = CartAddProductForm(request.POST)  # 수량을 받기 위한 폼
+        if form.is_valid():
+            # 폼에서 수량을 가져와 장바구니에 추가
+            quantity = form.cleaned_data['quantity']
+            cart = Cart(request)  # 세션 기반 Cart 객체 가져오기
+            cart.add(product=product, quantity=quantity)  # 장바구니에 추가
+            cart.save()  # 세션 저장
+
+        return redirect('users:wishlist')
+    else:
+        form = CartAddProductForm(initial={'quantity': 1})  # 기본 수량 1로 초기화된 폼 반환
+    return redirect('users:wishlist')
+
