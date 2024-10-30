@@ -73,14 +73,16 @@
             
                 <!-- 검색창 영역 -->
                 <div class="search-bar">
-                    <input type="text" placeholder="검색어를 입력해주세요" class="form-control">
-                    <button><i class="bi bi-search"></i> 🔍</button>
+                    <form action="{% url 'shop:product_search' %}" method="GET"> <!-- 검색 결과를 처리할 URL로 이동 -->
+                        <input type="text" name="q" placeholder="검색어를 입력해주세요" class="form-control" required>
+                        <button type="submit"><i class="bi bi-search"></i> 🔍</button>
+                    </form>
                 </div>
             
                 <!-- 배송지, 찜목록, 장바구니 -->
                 <div class="d-flex gap-3">
                     <p>배송지등록</p>
-                    <p>찜목록</p>
+                    <a href="{% url 'users:wishlist' %}">찜목록</a>
                     <a href="{% url 'cart:cart_detail' %}">장바구니({{ cart_item_count }})</a>
                 </div>
             </div>

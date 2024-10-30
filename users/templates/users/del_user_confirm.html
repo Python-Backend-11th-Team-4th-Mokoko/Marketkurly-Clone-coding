@@ -6,8 +6,26 @@
 
 <form method="post">
     {% csrf_token %}
+    <div>
+        <label name="label_password" for="{{ password_form.password.id_for_label }}">{{ password_form.password.label }}</label>
+        {{ password_form.password }}
+        {% if password_form.password.errors %}
+        <script type="text/javascript">
+            document.getElementsByName('password')[0].setAttribute('class', 'form-control is-invalid')
+        </script>
+        {% for error in password_form.password.errors %}
+        <div class="invalid-feedback">
+            {{ error }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        <small>
+            본인인증을 위해 비밀번호를 입력해주세요.
+        </small>
+    </div>
     <button type="submit">탈퇴하기</button>
     <a href="{% url 'users:my_page' %}">취소</a>
 </form>
 {% endblock %}
+
 

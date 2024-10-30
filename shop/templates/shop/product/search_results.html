@@ -2,43 +2,54 @@
 {% load static %}
 
 {% block title %}
-    New Products
+    {% if category %}{{ category.name }}{% else %}Products{% endif %}
 {% endblock %}
 
 
 {% block content %}
+<h2 style="text-align: center;">{{ category.get_name_display }}</h2>
+<div class="d-flex justify-content-between" style="margin-left: 100px; margin-right: 100px;"> <!-- 카테고리 버튼들 -->
+    <br>
+    <!-- <li> 이부분은 서브카테고리 만들었을 때 전체보기 가능하도록 할 자리 </li> -->
+    {% for c in categories %}
+        <li {% if category.slug == c.slug %}class="selected"{% endif %}>
+            <a href="{{ c.get_absolute_url }}">{{ c.get_name_display }}</a>
+        </li>
+    {% endfor %}
+</div>
+<br><br><br>
 <div class="d-flex justify-content-between">
     <div class="flex-grow-1" style="flex-basis: 30%;"> <!-- 왼쪽 필터 -->
         <div class="p-3">
             필터링
-            <form method="post"></form>
+            <form method="post">
                 {% csrf_token %}
                 <!-- 배송방식 -->
                 <label for="delivery">배송 방식:</label>
                 {{ form.delivery }}
-            
+                <br>
                 <!-- 포장방식 -->
                 <label for="packaging">포장 방식:</label>
                 {{ form.packaging }}
-            
+                <br>
                 <!-- 가격범위 -->
                 <label for="min_price">최소 가격:</label>
                 {{ form.min_price }}
-            
+                <br>
                 <label for="max_price">최대 가격:</label>
                 {{ form.max_price }}
-
+                <br>
                 <!-- 가격 순서 필터 -->
                 <label for="array">가격 순서:</label>
                 {{ form.array }}
-            
+                <br>
                 <button type="submit" class="btn btn-primary">필터링</button>
             </form>
         </div>
     </div>
     <div class="flex-grow-1" style="flex-basis: 70%;"><!-- 상품 리스트 -->
         <div class="p-3">
-            {% for product in new_products %}
+            {% for product in results %}
                 <div>
                     <a href="{{ product.get_absolute_url }}"><!-- 디테일로 이동 -->
                         <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}" width="320" height="210">
@@ -62,7 +73,7 @@
                     <a href="{{ product.get_absolute_url }}">{{ product.product_name }}</a>
                     <br>
                     <p>{{ product.price }}원    <br>   등록날짜:{{ product.created|date:"Y-m-d H:i" }}</p>
-                    <a href="{{ product.get_absolute_url }}">{{ product.product_name }}</a><!-- 디테일로 이동 -->
+                    <br>
                 </div>
             {% endfor %}
         </div>

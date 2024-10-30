@@ -1,5 +1,4 @@
 from django.urls import path
-from django.contrib.auth import views as auth_views
 from . import views
 
 app_name = "users"
@@ -15,4 +14,9 @@ urlpatterns = [
     # 아이디 찾기 URL 패턴
     path('find-username/', views.send_username_email, name='find_username'),
     path('activate/<uidb64>/<token>/', views.activate, name='activate'),
+    #찜 기능
+    path('wishlist/add/<int:product_id>/', views.add_to_wishlist, name='add_to_wishlist'),
+    path('wishlist/remove/<int:product_id>/', views.remove_from_wishlist, name='remove_from_wishlist'),
+    path('wishlist/cart/<int:product_id>/', views.wishlist_to_cart, name='wishlist_to_cart'),
+    path('wishlist/', views.wishlist, name='wishlist')
 ]

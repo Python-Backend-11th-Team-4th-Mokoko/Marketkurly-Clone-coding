@@ -3,35 +3,60 @@ from django.conf import settings
 from django.shortcuts import redirect
 
 from shop.models import Product
+from cart.models import CartItem
 
-# 모델 대신 세션에 정보를 저장
 
 class Cart:
     def __init__(self, request):
-        self.session = request.session #세션정보를 멤버변수에
-        cart = self.session.get(settings.CART_SESSION_ID) #세션정보 중 CART_SESSION_ID에 해당하는것
+        self.session = request.session
+        self.user = request.user if request.user.is_authenticated else None
+        cart = self.session.get(settings.CART_SESSION_ID)
+
         if not cart:
-            cart = self.session[settings.CART_SESSION_ID] = {} #없으면 비어있는 카트 딕셔너리를 만들기
+            cart = self.session[settings.CART_SESSION_ID] = {}
 
-        self.cart = cart #지금까지 생성한 cart를 멤버변수화
+        self.cart = cart
 
-
-    def add(self, product, quantity=1, override_quantity=False): #제품정보 추가 
+    def add(self, product, quantity=1, override_quantity=False):
         product_id = str(product.id)
 
-        if product_id not in self.cart: #상품정보가 카트에 없으면 생성
-           self.cart[product_id] = {'quantity': 0, 'price': str(product.price)} #self.cart에 새로 추가
+        if product_id not in self.cart:
+            self.cart[product_id] = {'quantity': 0, 'price': str(product.price)}
 
-        if override_quantity: #오버라이드가 True라면
+        if override_quantity:
             self.cart[product_id]['quantity'] = quantity
-        else: #오버라이드가 False라면
+        else:
             self.cart[product_id]['quantity'] += quantity
 
-        self.save() #정보를 저장
-
+        self.save()  # 세션에 저장
+        self.save_to_db() # DB에 저장
 
     def save(self):
         self.session.modified = True #세션 객체가 수정되었음.
+
+    def save_to_db(self):
+        if self.user:
+            # DB에 저장된 장바구니 비우기
+            CartItem.objects.filter(user=self.user).delete()
+
+            # 세션 데이터를 DB에 저장
+            for item_id, item_data in self.cart.items():
+                product = Product.objects.get(id=item_id)
+                CartItem.objects.create(user=self.user, product=product, quantity=item_data['quantity'])
+
+    def merge_with_db(self):
+        if self.user:
+            db_cart_items = CartItem.objects.filter(user=self.user)
+            for db_item in db_cart_items:
+                product_id = str(db_item.product.id)
+                if product_id in self.cart:
+                    # 세션에 있는 상품과 DB 상품의 수량을 병합
+                    self.cart[product_id]['quantity'] += db_item.quantity
+                else:
+                    # DB에만 있는 상품을 세션에 추가
+                    self.cart[product_id] = {'quantity': db_item.quantity, 'price': str(db_item.product.price)}
+
+            self.save()
 
 
     def remove(self, product):
@@ -67,6 +92,10 @@ class Cart:
     def clear(self):
         del self.session[settings.CART_SESSION_ID]
         self.save()
+
+        # DB도 삭제
+        if self.user:
+            CartItem.objects.filter(user=self.user).delete()
 
 
 # 그냥 메모용
