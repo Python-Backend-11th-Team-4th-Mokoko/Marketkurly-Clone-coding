@@ -2,10 +2,15 @@
 
 {% block content %}
 <h1>회원정보 수정</h1>
-<form action="{% url 'users:update_user' %}" method = 'POST'>
+<form action="{% url 'users:update_user' %}" method="POST">
     {% csrf_token %}
-    {{form.as_p}}
-    <button type="submit">수정하기</button>
+    {% if not password_confirmed %}
+        {{ password_form.as_p }}
+        <button type="submit" name="confirm_password">비밀번호 확인</button>
+    {% else %}
+        {{ customuser_form.as_p }}
+        <button type="submit" name="update_user">수정하기</button>
+    {% endif %}
 </form>
 <a href="{% url 'shop:home' %}">돌아가기</a>
-{% endblock content%}
+{% endblock content %}

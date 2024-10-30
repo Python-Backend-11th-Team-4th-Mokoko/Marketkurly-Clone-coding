@@ -1,12 +1,13 @@
 from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib.auth import login as app_login
 from django.contrib.auth import logout as app_logout
-from .forms import CustomUserCreationForm, CustomUserChangeForm
+from .forms import CustomUserCreationForm, CustomUserChangeForm, FindUsernameForm, CheckPasswordForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from shop.models import Product
 from .models import Wishlist
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 # 이메일 인증을 위한 import
 from django.shortcuts import render, redirect
@@ -17,8 +18,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.template.loader import render_to_string
 from .tokens import account_activation_token
-from .forms import FindUsernameForm
-
+# 장바구니 기능을 위한 import
 from cart.cart import Cart
 from cart.forms import CartAddProductForm
 
@@ -59,33 +59,52 @@ def signup(request):
     return render(request, 'users/signup.html', content)
 
 def del_user(request):
-    user = request.user
     if request.method == 'POST':
-        # POST 요청이 들어오면 사용자를 삭제하고 로그아웃 처리
-        user.delete()
-        app_logout(request)
-        return redirect('shop:home')
-    
-    # GET 요청 시에는 탈퇴 확인 페이지를 렌더링
-    return render(request, 'users/del_user_confirm.html')
-
-def update_user(request):
-    # 현재 로그인한 사용자 인스턴스를 가져옴
-    user = request.user
-
-    if request.method == 'POST':
-        form = CustomUserChangeForm(request.POST, instance=user)  # 인스턴스를 전달
+        form = CheckPasswordForm(request.POST, user=request.user)
+        
         if form.is_valid():
-            user_instance = form.save(commit=False)  # 사용자 인스턴스를 일단 저장하지 않고 반환
-            user_instance.make_date = user.make_date  # make_date 필드를 기존 값으로 유지
-            user_instance.save()  # 실제 저장
+            # POST 요청이 들어오면 사용자를 삭제하고 로그아웃 처리
+            request.user.delete()
+            app_logout(request)
+            messages.success(request, '회원 탈퇴가 완료되었습니다.')
             return redirect('shop:home')
     else:
-        # GET 요청에서는 기존 사용자 데이터를 폼에 미리 채워서 보냄
-        form = CustomUserChangeForm(instance=user)
+        form = CheckPasswordForm(user=request.user)
+    # GET 요청 시에는 탈퇴 확인 페이지를 렌더링
+    return render(request, 'users/del_user_confirm.html', {'password_form': form})
 
-    content = {'form': form}
-    return render(request, 'users/update.html', content)
+@login_required
+def update_user(request):
+    user = request.user
+    # 세션에 저장된 password_confirmed 값 가져오기 (기본값은 False)
+    password_confirmed = request.session.get('password_confirmed', False)
+    password_form = CheckPasswordForm(user=user)
+    customuser_form = CustomUserChangeForm(instance=user)
+    
+    if request.method == 'POST':
+        if 'confirm_password' in request.POST:  # 비밀번호 인증 폼 제출 시
+            password_form = CheckPasswordForm(request.POST, user=user)
+            if password_form.is_valid():
+                # 세션에 비밀번호 인증 성공 상태 저장
+                request.session['password_confirmed'] = True
+                password_confirmed = True
+        elif 'update_user' in request.POST and password_confirmed:  # 프로필 수정 폼 제출 시
+            customuser_form = CustomUserChangeForm(request.POST, instance=user)
+            if customuser_form.is_valid():
+                customuser_form.save()  # 변경된 사용자 정보를 저장
+                messages.success(request, '프로필이 성공적으로 업데이트되었습니다.')
+                # 세션에서 비밀번호 인증 상태 제거
+                request.session.pop('password_confirmed', None)
+                return redirect('shop:home')
+            else:
+                messages.error(request, '입력한 정보가 유효하지 않습니다. 다시 확인해 주세요.')
+    
+    # GET 요청이거나 폼 검증 실패 시 화면 표시
+    return render(request, 'users/update.html', {
+        'password_form': password_form,
+        'customuser_form': customuser_form,
+        'password_confirmed': password_confirmed,
+    })
 
 def change_password(request):
     if request.method == 'POST':

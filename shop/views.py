@@ -196,7 +196,7 @@ def search_products(request):
         # 유사도 정보와 함께 상품을 정렬
         products_with_similarity = sorted(zip(products, similarities), key=lambda x: x[1], reverse=True)
 
-        # 유사도가 높은 상위 N개의 상품 반환
+        # 유사도가 높은 순서대로 상품 반환
         results = [product for product, similarity in products_with_similarity if similarity > 0.3]  # 유사도가 0.3 이상인 상품만
 
     else:
